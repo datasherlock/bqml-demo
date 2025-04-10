@@ -1,5 +1,5 @@
 
-![bqml-demo](https://github.com/user-attachments/assets/5755e075-c10f-4da8-82f2-007544128746)
+![bqml-demo](https://github.com/user-attachments/assets/5755e075-c10f-4da8-82f2-007544128746 =250x250)
 
 # BigQuery ML Account Fraud Detection Demo
 
