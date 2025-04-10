@@ -1,3 +1,6 @@
+
+![bqml-demo](https://github.com/user-attachments/assets/5755e075-c10f-4da8-82f2-007544128746)
+
 # BigQuery ML Account Fraud Detection Demo
 
 This SQL script demonstrates a basic workflow for building, evaluating, and explaining a machine learning model for account fraud detection using BigQuery ML. The script uses data from an external Cloud Spanner table.
