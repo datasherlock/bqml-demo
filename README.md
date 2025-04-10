@@ -1,5 +1,6 @@
 
-<img src = "https://github.com/user-attachments/assets/5755e075-c10f-4da8-82f2-007544128746", width="48">
+![bqml-demo](https://github.com/user-attachments/assets/7d98da3b-29cc-48fc-90f2-a940cbec25df)
+
 
 # BigQuery ML Account Fraud Detection Demo
 
