@@ -1,6 +1,6 @@
--- Create a new table or replace the existing 'account_activity_cleansed' table in the 'datasherlock_usc1' dataset.
+-- Create a new table or replace the existing 'account_activity_cleansed' table.
 -- This table will store cleansed account activity data.
-CREATE OR REPLACE TABLE datasherlock_usc1.account_activity_cleansed
+CREATE OR REPLACE TABLE demo_dataset.account_activity_cleansed
 AS
 -- Select columns from the external Spanner table 'account_activity_raw' using EXTERNAL_QUERY.
 SELECT
@@ -31,13 +31,13 @@ SELECT case when classifier<0.8 then "training"       -- 80% for training
             when classifier between 0.8 and 0.9 then "evaluation" -- 10% for evaluation
             else "prediction" end as category,        -- 10% for prediction
 count(*)
-from datasherlock_usc1.account_activity_cleansed 
+from demo_dataset.account_activity_cleansed 
 group by category;
 
 
--- Create or replace a BigQuery ML model named 'fraud_model' in the 'datasherlock_usc1' dataset.
+-- Create or replace a BQML model named 'fraud_model' in the 'demo_dataset' dataset.
 CREATE OR REPLACE MODEL
-`datasherlock_usc1.fraud_model`
+`demo_dataset.fraud_model`
 OPTIONS
 ( -- Specify the model type as Logistic Regression.
   model_type='LOGISTIC_REG',
@@ -53,7 +53,7 @@ OPTIONS
 -- Select all columns except the 'classifier' column used for splitting.
 SELECT * EXCEPT(classifier)
 FROM
-`datasherlock_usc1.account_activity_cleansed`
+`demo_dataset.account_activity_cleansed`
 -- Use only the data designated for training (classifier value less than 0.8).
 WHERE
 classifier < 0.8;
@@ -63,13 +63,13 @@ SELECT
 *
 FROM
 -- Use the ML.EVALUATE function to get evaluation metrics.
-ML.EVALUATE (MODEL `datasherlock_usc1.fraud_model`,
+ML.EVALUATE (MODEL `demo_dataset.fraud_model`,
   (
   -- Select all columns from the cleansed data.
   SELECT
     *
   FROM
-    `datasherlock_usc1.account_activity_cleansed`
+    `demo_dataset.account_activity_cleansed`
   -- Use only the data designated for evaluation (classifier value between 0.8 and 0.9).
   WHERE
     classifier between 0.8 and 0.9
@@ -81,13 +81,13 @@ SELECT
 *
 FROM
 -- Use ML.EXPLAIN_PREDICT to get predictions along with feature attributions (explanations).
-ML.EXPLAIN_PREDICT (MODEL `datasherlock_usc1.fraud_model`,
+ML.EXPLAIN_PREDICT (MODEL `demo_dataset.fraud_model`,
   (
   -- Select all columns from the cleansed data.
   SELECT
     *
   FROM
-    `datasherlock_usc1.account_activity_cleansed`
+    `demo_dataset.account_activity_cleansed`
   -- Use only the data designated for prediction (classifier value greater than 0.9).
   WHERE
     classifier > 0.9
@@ -101,7 +101,7 @@ where predicted_unusual_activity <> unusual_activity;
 /*
 -- Example UPDATE statement (commented out):
 -- This statement demonstrates how to update a specific record in the 'account_activity_cleansed' table.
--- NOTE: The dataset name 'datasherlock_us' might be a typo or refer to a different dataset than 'datasherlock_usc1' used earlier.
+-- NOTE: The dataset name 'datasherlock_us' might be a typo or refer to a different dataset than 'demo_dataset' used earlier.
 update datasherlock_us.account_activity_cleansed
 set transaction_amount = 98
 where account_id = 'fdf02450'
