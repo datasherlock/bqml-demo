@@ -22,7 +22,7 @@ SELECT
   RAND() AS classifier
 FROM
   -- Query the external Spanner table 'account_activity_raw' via the connection 'demo-spanner-conn'.
-  EXTERNAL_QUERY("datasherlock.us-central1.demo-spanner-conn", "SELECT * FROM account_activity_raw");
+  EXTERNAL_QUERY("my_spanner_db.us-central1.demo-spanner-conn", "SELECT * FROM account_activity_raw");
 
 
 -- This query demonstrates how to check the distribution of data into training, evaluation, and prediction categories
@@ -98,12 +98,3 @@ ML.EXPLAIN_PREDICT (MODEL `demo_dataset.fraud_model`,
 where predicted_unusual_activity <> unusual_activity;
 
 
-/*
--- Example UPDATE statement (commented out):
--- This statement demonstrates how to update a specific record in the 'account_activity_cleansed' table.
--- NOTE: The dataset name 'datasherlock_us' might be a typo or refer to a different dataset than 'demo_dataset' used earlier.
-update datasherlock_us.account_activity_cleansed
-set transaction_amount = 98
-where account_id = 'fdf02450'
-and device_type = 'Mobile';
-*/
